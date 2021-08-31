@@ -1,6 +1,7 @@
 const properties = require('../configs/properties');
 const dbClient = require('../configs/database');
 const uniqueId = require("mongodb-autoincrement");
+const generateOTP = require('../otp/otp');
 
 
 module.exports = {
@@ -28,12 +29,14 @@ function userRegistration(req, res) {
                         return res.json({ status: false, statusCode: 400, message: 'mobileNo already in use' });
                     }
                 } else {
-                    uniqueId.getNextSequence(db, properties.collection.user_master, (error, autoIndex) => {
+                    uniqueId.getNextSequence(db, properties.collection.user_master, async (error, autoIndex) => {
                         _userDetails.userId = autoIndex.toString();
                         _userDetails.firstName = input.firstName;
                         _userDetails.email = input.email;
                         _userDetails.mobileNo = input.mobileNo;
                         _userDetails.countryCode = input.countryCode;
+                        let _otp = await generateOTP(6);
+                        _userDetails.phoneOTP = _otp;
 
                         db.collection(properties.collection.user_master).insertOne(_userDetails, (error, _result) => {
                             if (error) {
