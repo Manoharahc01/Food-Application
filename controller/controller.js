@@ -5,7 +5,8 @@ const generateOTP = require('../otp/otp');
 
 
 module.exports = {
-    userRegistration: userRegistration
+    userRegistration: userRegistration,
+    verifyOtp: verifyOtp
 }
 
 dbClient.connect((database) => {
@@ -36,7 +37,7 @@ function userRegistration(req, res) {
                         _userDetails.mobileNo = input.mobileNo;
                         _userDetails.countryCode = input.countryCode;
                         let _otp = await generateOTP(6);
-                        _userDetails.phoneOTP = _otp;
+                        _userDetails.phoneOtp = _otp;
 
                         db.collection(properties.collection.user_master).insertOne(_userDetails, (error, _result) => {
                             if (error) {
@@ -46,6 +47,28 @@ function userRegistration(req, res) {
                             }
                         })
                     });
+                }
+            });
+        }
+    } catch (e) {
+        console.log(e.message);
+    }
+}
+
+function verifyOtp(req, res) {
+    try {
+        let input = req.body;
+        if (!input.countryCode || !input.mobileNo || !input.phoneOtp) {
+            return res.json({ status: false, statusCode: 400, message: 'parameter missing' });
+        } else {
+            let _query = { $and: [{ 'mobileNo': input.mobileNo }, { 'countryCode': input.countryCode }, { 'phoneOtp': input.phoneOtp }] };
+            db.collection(properties.collection.user_master).findOne(_query, (error, _data) => {
+                if (error) {
+                    return res.json({ status: false, statusCode: 400, message: 'database error' });
+                } else if (_data != null) {
+                    return res.json({ status: true, statusCode: 200, message: 'otp verified successfully' });
+                } else {
+                    return res.json({ status: false, statusCode: 400, message: 'please confirm otp you have entered' });
                 }
             });
         }
