@@ -95,6 +95,7 @@ function userLogin(req, res) {
                         {
                             userId: _data.userId,
                             email: _data.email,
+                            mobileNo: _data.mobileNo
                         },
                         "somesupersecretsecret",
                         { expiresIn: "365d" }
