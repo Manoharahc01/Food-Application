@@ -104,7 +104,7 @@ function userLogin(req, res) {
                     _token.userId = _data.userId;
                     _token.fullName = _data.fullName;
                     _token.email = _data.email;
-                    _token.mobileNo = _data.mobileNo ;
+                    _token.mobileNo = _data.mobileNo;
                     //sms otp code write here
                     return res.json({ status: true, statusCode: 200, message: 'user login successfully', result: _token });
                 } else {

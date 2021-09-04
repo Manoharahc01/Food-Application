@@ -4,6 +4,7 @@ module.exports = {
         dbName: 'Food_Delicious'
     },
     collection: {
-        user_master: 'userMaster'
+        user_master: 'userMaster',
+        food_categories: 'foodCategory',
     }
 }

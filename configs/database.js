@@ -13,3 +13,9 @@ module.exports.connect = function (database) {
         }
     });
 }
+
+module.exports.getFoodApp = () => {
+    if (db) {
+        return db;
+    }
+}
